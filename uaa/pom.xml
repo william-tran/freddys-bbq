@@ -25,6 +25,9 @@
           <container>
             <containerId>tomcat8x</containerId>
             <type>embedded</type>
+            <systemProperties>
+              <UAA_CONFIG_PATH>${project.basedir}</UAA_CONFIG_PATH>
+            </systemProperties>
           </container>
           <deployables>
             <deployable>
