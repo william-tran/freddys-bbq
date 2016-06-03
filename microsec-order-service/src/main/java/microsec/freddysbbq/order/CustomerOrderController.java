@@ -42,7 +42,7 @@ public class CustomerOrderController {
     private OrderRepository orderRepository;
 
     @Autowired
-    @Qualifier("loadBalancedOauth2RestTemplate")
+    @Qualifier("clientCredentialsRestTemplate")
     @Setter
     private OAuth2RestTemplate oAuth2RestTemplate;
 

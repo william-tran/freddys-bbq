@@ -26,6 +26,11 @@ oauth:
       secret: secret
       authorized-grant-types: password
       scope: openid,menu.read,order.me
+      authorities: uaa.resource
+    order-service:
+      secret: secret
+      authorized-grant-types: client_credentials
+      authorities: menu.read, uaa.resource
 
 scim:
   users:

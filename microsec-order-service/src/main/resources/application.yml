@@ -7,7 +7,10 @@ security:
     enabled: false
 spring.oauth2:
   client:
-    clientId: order
+    clientId: order-service
+    clientSecret: secret
+    accessTokenUri: http://localhost:8080/uaa/oauth/token
+    
   resource:
     id: order
     jwt.keyUri: ${targets.uaa}/token_key
