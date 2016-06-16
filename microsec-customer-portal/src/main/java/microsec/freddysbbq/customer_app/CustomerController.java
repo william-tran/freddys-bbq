@@ -5,12 +5,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 
-import lombok.Data;
-import microsec.common.MenuBootstrap;
-import microsec.common.Targets;
-import microsec.freddysbbq.menu.model.v1.MenuItem;
-import microsec.freddysbbq.order.model.v1.Order;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
@@ -24,6 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+
+import microsec.common.MenuBootstrap;
+import microsec.common.Targets;
+import microsec.freddysbbq.menu.model.v1.MenuItem;
+import microsec.freddysbbq.order.model.v1.Order;
 
 @Controller
 public class CustomerController {
@@ -96,8 +95,15 @@ public class CustomerController {
         return myOrdersFallback(model);
     }
 
-    @Data
     public static class OrderForm {
         private LinkedHashMap<Long, Integer> order = new LinkedHashMap<Long, Integer>();
+
+		public LinkedHashMap<Long, Integer> getOrder() {
+			return order;
+		}
+
+		public void setOrder(LinkedHashMap<Long, Integer> order) {
+			this.order = order;
+		}
     }
 }

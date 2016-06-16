@@ -8,14 +8,11 @@ import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-import lombok.Data;
-
 /**
  * Copies the model of UAA's JWT token 
  * @author wtran@pivotal.io
  *
  */
-@Data
 @JsonInclude(Include.NON_NULL)
 public class UaaJwtToken {
     private String jti;
@@ -39,7 +36,135 @@ public class UaaJwtToken {
         return new UaaJwtTokenBuilder();
     }
 
-    /**
+    public String getJti() {
+		return jti;
+	}
+
+	public void setJti(String jti) {
+		this.jti = jti;
+	}
+
+	public String getSub() {
+		return sub;
+	}
+
+	public void setSub(String sub) {
+		this.sub = sub;
+	}
+
+	public Collection<String> getAuthorities() {
+		return authorities;
+	}
+
+	public void setAuthorities(Collection<String> authorities) {
+		this.authorities = authorities;
+	}
+
+	public Collection<String> getScope() {
+		return scope;
+	}
+
+	public void setScope(Collection<String> scope) {
+		this.scope = scope;
+	}
+
+	public String getClient_id() {
+		return client_id;
+	}
+
+	public void setClient_id(String client_id) {
+		this.client_id = client_id;
+	}
+
+	public String getCid() {
+		return cid;
+	}
+
+	public void setCid(String cid) {
+		this.cid = cid;
+	}
+	
+	public String getAzp() {
+		return azp;
+	}
+
+	public void setAzp(String azp) {
+		this.azp = azp;
+	}
+
+	public String getGrant_type() {
+		return grant_type;
+	}
+
+	public void setGrant_type(String grant_type) {
+		this.grant_type = grant_type;
+	}
+
+	public String getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(String user_id) {
+		this.user_id = user_id;
+	}
+
+	public String getUser_name() {
+		return user_name;
+	}
+
+	public void setUser_name(String user_name) {
+		this.user_name = user_name;
+	}
+	
+	public String getEmail() {
+		return email;
+	}
+	
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public long getIat() {
+		return iat;
+	}
+
+	public void setIat(long iat) {
+		this.iat = iat;
+	}
+	
+	public long getExp() {
+		return exp;
+	}
+	
+	public void setExp(long exp) {
+		this.exp = exp;
+	}
+	
+	public String getIss() {
+		return iss;
+	}
+	
+	public void setIss(String iss) {
+		this.iss = iss;
+	}
+
+	public String getZid() {
+		return zid;
+	}
+
+	public void setZid(String zid) {
+		this.zid = zid;
+	}
+
+	public Collection<String> getAud() {
+		return aud;
+	}
+
+	public void setAud(Collection<String> aud) {
+		this.aud = aud;
+	}
+
+	/**
      * Copies the behaviour of UAA's JWT token in relation to how some fields affect
      * others
      * @author wtran@pivotal.io
