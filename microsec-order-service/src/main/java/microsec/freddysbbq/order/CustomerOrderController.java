@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 
-import lombok.Setter;
 import microsec.common.Targets;
 import microsec.freddysbbq.menu.model.v1.MenuItem;
 import microsec.freddysbbq.order.model.v1.Order;
@@ -43,12 +42,10 @@ public class CustomerOrderController {
 
     @Autowired
     @Qualifier("loadBalancedOauth2RestTemplate")
-    @Setter
     private OAuth2RestTemplate oAuth2RestTemplate;
 
     @Autowired
     @Qualifier("userInfoRestTemplate")
-    @Setter
     private OAuth2RestTemplate userInfoRestTemplate;
 
     @Autowired
@@ -109,4 +106,13 @@ public class CustomerOrderController {
         orderRepository.save(order);
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
+
+    public void setOAuth2RestTemplate(OAuth2RestTemplate oAuth2RestTemplate) {
+        this.oAuth2RestTemplate = oAuth2RestTemplate;
+    }
+
+    public void setUserInfoRestTemplate(OAuth2RestTemplate userInfoRestTemplate) {
+        this.userInfoRestTemplate = userInfoRestTemplate;
+    }
+
 }
