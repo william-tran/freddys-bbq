@@ -10,10 +10,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.security.oauth2.sso.EnableOAuth2Sso;
-import org.springframework.cloud.security.oauth2.sso.OAuth2SsoConfigurerAdapter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.ParameterizedTypeReference;
@@ -24,6 +23,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.provider.expression.OAuth2WebSecurityExpressionHandler;
 import org.springframework.stereotype.Controller;
@@ -49,31 +49,24 @@ import microsec.freddysbbq.order.model.v1.Order;
 @EnableDiscoveryClient
 @EnableCircuitBreaker
 @Import(DumpTokenEndpointConfig.class)
-public class AdminApplication {
+public class AdminApplication extends WebSecurityConfigurerAdapter {
 
     public static void main(String[] args) {
         SpringApplication.run(AdminApplication.class, args);
     }
 
-    @Bean
-    public OAuth2SsoConfigurerAdapter oAuth2SsoConfigurerAdapter(SecurityProperties securityProperties) {
-        return new OAuth2SsoConfigurerAdapter() {
-            @Override
-            public void match(RequestMatchers matchers) {
-                matchers.antMatchers("/**");
-            }
+    @Autowired
+    private SecurityProperties securityProperties; 
 
-            @Override
-            public void configure(HttpSecurity http) throws Exception {
-                if (securityProperties.isRequireSsl()) {
-                    http.requiresChannel().anyRequest().requiresSecure();
-                }
+    @Override
+    public void configure(HttpSecurity http) throws Exception {
+        if (securityProperties.isRequireSsl()) {
+            http.requiresChannel().anyRequest().requiresSecure();
+        }
 
-                http.authorizeRequests()
-                        .expressionHandler(new OAuth2WebSecurityExpressionHandler())
-                        .anyRequest().access("#oauth2.hasScope('menu.write')");
-            }
-        };
+        http.authorizeRequests()
+                .expressionHandler(new OAuth2WebSecurityExpressionHandler())
+                .anyRequest().access("#oauth2.hasScope('menu.write')");
     }
 
     @Autowired

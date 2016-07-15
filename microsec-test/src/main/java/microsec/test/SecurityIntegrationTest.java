@@ -37,7 +37,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @WebIntegrationTest()
 @TestPropertySource(properties = {
         "server.port=0",
-        "spring.oauth2.resource.jwt.keyValue=test"
+        "security.oauth2.resource.jwt.keyValue=test"
 })
 public abstract class SecurityIntegrationTest {
 
@@ -85,7 +85,7 @@ public abstract class SecurityIntegrationTest {
 
     protected HttpResponse httpsRequest(HttpMethod method, String uriString, Map<String, String> headers,
             ContentType contentType, String body) throws ClientProtocolException,
-                    IOException {
+            IOException {
         HttpUriRequest request = null;
         URI uri = UriComponentsBuilder.fromUriString(uriString)
                 .scheme("http")
@@ -141,7 +141,7 @@ public abstract class SecurityIntegrationTest {
 
     protected HttpResponse httpsRequest(HttpMethod method, String uri, UaaJwtToken token, ContentType contentType,
             String body)
-                    throws ClientProtocolException, IOException {
+            throws ClientProtocolException, IOException {
         String tokenValue = JwtHelper.encode(objectMapper.writeValueAsString(token), signer).getEncoded();
 
         return httpsRequest(method, uri, Collections.singletonMap("Authorization", "Bearer " + tokenValue), contentType,
