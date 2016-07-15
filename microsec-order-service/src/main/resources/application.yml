@@ -5,12 +5,12 @@ server.port: 8085
 security:
   basic:
     enabled: false
-spring.oauth2:
-  client:
-    clientId: order
-  resource:
-    id: order
-    jwt.keyUri: ${targets.uaa}/token_key
-    userInfoUri: ${targets.uaa}/userinfo
+  oauth2:
+    client:
+      clientId: order
+    resource:
+      id: order
+      jwt.keyUri: ${targets.uaa}/token_key
+      userInfoUri: ${targets.uaa}/userinfo
 
 spring.jpa.hibernate.ddl-auto: update

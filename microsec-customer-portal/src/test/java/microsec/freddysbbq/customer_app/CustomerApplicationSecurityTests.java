@@ -2,8 +2,8 @@ package microsec.freddysbbq.customer_app;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2SsoProperties;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.cloud.security.oauth2.sso.OAuth2SsoProperties;
 import org.springframework.test.context.TestPropertySource;
 
 import microsec.test.SecurityIntegrationTest;
