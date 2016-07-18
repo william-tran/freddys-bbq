@@ -12,6 +12,7 @@ import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.hateoas.hal.Jackson2HalModule;
@@ -19,7 +20,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,53 +39,50 @@ import microsec.common.Targets;
 @Import(DumpTokenEndpointConfig.class)
 public class CustomerApplication extends WebSecurityConfigurerAdapter {
 
-    public static void main(String[] args) {
-        SpringApplication.run(CustomerApplication.class, args);
-    }
-    
-    @Autowired
-    private SecurityProperties securityProperties; 
+	public static void main(String[] args) {
+		SpringApplication.run(CustomerApplication.class, args);
+	}
 
-    @Override
-    public void configure(HttpSecurity http) throws Exception {
-        if (securityProperties.isRequireSsl()) {
-            http.requiresChannel().anyRequest().requiresSecure();
-        }
-        http.authorizeRequests().anyRequest().authenticated();
-    }
-    
-    @Autowired
-    @Qualifier("loadBalancedOauth2RestTemplate")
-    private OAuth2RestTemplate oauth2RestTemplate;
+	@Autowired
+	private SecurityProperties securityProperties;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+	@Override
+	public void configure(HttpSecurity http) throws Exception {
+		if (securityProperties.isRequireSsl()) {
+			http.requiresChannel().anyRequest().requiresSecure();
+		}
+		http.authorizeRequests().anyRequest().authenticated();
+	}
 
     @Bean
     public Targets targets() {
         return new Targets();
     }
 
-    @Bean
-    public Branding branding() {
-        return new Branding();
-    }
+	@Bean
+	public Branding branding() {
+		return new Branding();
+	}
 
-    @Bean
-    public MenuBootstrap menuBootstrap() {
-        return new MenuBootstrap();
-    }
+	@Bean
+	public MenuBootstrap menuBootstrap() {
+		return new MenuBootstrap();
+	}
 
-    @PostConstruct
-    public void halConfig() {
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        objectMapper.registerModule(new Jackson2HalModule());
-        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-        converter.setSupportedMediaTypes(MediaType.parseMediaTypes("application/hal+json"));
-        converter.setObjectMapper(objectMapper);
-        oauth2RestTemplate.setMessageConverters(Arrays.asList(converter));
-    }
-
-
+	@LoadBalanced
+	@Bean
+	public OAuth2RestTemplate loadBalancedOauth2RestTemplate(
+			OAuth2ProtectedResourceDetails resource,
+			OAuth2ClientContext oauth2Context,
+			ObjectMapper objectMapper) {
+		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		objectMapper.registerModule(new Jackson2HalModule());
+		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+		converter.setSupportedMediaTypes(MediaType.parseMediaTypes("application/hal+json"));
+		converter.setObjectMapper(objectMapper);
+		OAuth2RestTemplate oauth2RestTemplate = new OAuth2RestTemplate(resource, oauth2Context);
+		oauth2RestTemplate.setMessageConverters(Arrays.asList(converter));
+		return oauth2RestTemplate;
+	}
 
 }

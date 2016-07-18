@@ -3,8 +3,6 @@ package microsec.freddysbbq.admin_app;
 import java.security.Principal;
 import java.util.Arrays;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
@@ -13,6 +11,7 @@ import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.ParameterizedTypeReference;
@@ -24,7 +23,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 import org.springframework.security.oauth2.provider.expression.OAuth2WebSecurityExpressionHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -68,13 +69,10 @@ public class AdminApplication extends WebSecurityConfigurerAdapter {
                 .expressionHandler(new OAuth2WebSecurityExpressionHandler())
                 .anyRequest().access("#oauth2.hasScope('menu.write')");
     }
-
+    
     @Autowired
     @Qualifier("loadBalancedOauth2RestTemplate")
     private OAuth2RestTemplate restTemplate;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @Bean
     public Targets targets() {
@@ -86,15 +84,15 @@ public class AdminApplication extends WebSecurityConfigurerAdapter {
         return new Branding();
     }
 
-    @PostConstruct
-    public void halConfig() {
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        objectMapper.registerModule(new Jackson2HalModule());
-        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-        converter.setSupportedMediaTypes(MediaType.parseMediaTypes("application/hal+json"));
-        converter.setObjectMapper(objectMapper);
-        restTemplate.setMessageConverters(Arrays.asList(converter));
-    }
+    @LoadBalanced
+	@Bean
+	public OAuth2RestTemplate loadBalancedOauth2RestTemplate(
+			OAuth2ProtectedResourceDetails resource,
+			OAuth2ClientContext oauth2Context) {
+		OAuth2RestTemplate oauth2RestTemplate = new OAuth2RestTemplate(resource, oauth2Context);
+		return oauth2RestTemplate;
+	}
+
 
     @RequestMapping("/")
     public String index(Model model, Principal principal) {
