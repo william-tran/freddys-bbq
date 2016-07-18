@@ -6,8 +6,6 @@ security:
   basic:
     enabled: false
   oauth2:
-    client:
-      clientId: order
     resource:
       id: order
       jwt.keyUri: ${targets.uaa}/token_key

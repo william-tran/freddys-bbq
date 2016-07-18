@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 
 import microsec.common.Targets;
+import microsec.common.TokenRelayingRestTemplate;
 import microsec.freddysbbq.menu.model.v1.MenuItem;
 import microsec.freddysbbq.order.model.v1.Order;
 import microsec.freddysbbq.order.model.v1.OrderItem;
@@ -41,12 +42,10 @@ public class CustomerOrderController {
     private OrderRepository orderRepository;
 
     @Autowired
-    @Qualifier("loadBalancedOauth2RestTemplate")
-    private OAuth2RestTemplate oAuth2RestTemplate;
+    @Qualifier("loadBalancedTokenRelayingRestTemplate")
+    private OAuth2RestTemplate loadBalancedTokenRelayingRestTemplate;
 
-    @Autowired
-    @Qualifier("userInfoRestTemplate")
-    private OAuth2RestTemplate userInfoRestTemplate;
+    private OAuth2RestTemplate tokenRelayingRestTemplate = new TokenRelayingRestTemplate();
 
     @Autowired
     private ResourceServerProperties resourceServerProperties;
@@ -66,7 +65,7 @@ public class CustomerOrderController {
         if (itemsAndQuantites.isEmpty()) {
             return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
         }
-        UserInfo userInfo = userInfoRestTemplate
+        UserInfo userInfo = tokenRelayingRestTemplate
                 .getForObject(resourceServerProperties.getUserInfoUri(), UserInfo.class);
         Order order = new Order();
         order.setCustomerId(principal.getName());
@@ -85,7 +84,7 @@ public class CustomerOrderController {
                 continue;
             }
             try {
-                MenuItem item = oAuth2RestTemplate
+                MenuItem item = loadBalancedTokenRelayingRestTemplate
                         .getForObject("{menu}/menuItems/{id}", MenuItem.class, targets.getMenu(), itemId);
                 OrderItem orderItem = new OrderItem();
                 orderItem.setOrder(order);
@@ -107,12 +106,12 @@ public class CustomerOrderController {
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 
-    public void setOAuth2RestTemplate(OAuth2RestTemplate oAuth2RestTemplate) {
-        this.oAuth2RestTemplate = oAuth2RestTemplate;
+    public void setLoadBalancedTokenRelayingRestTemplate(OAuth2RestTemplate oAuth2RestTemplate) {
+        this.loadBalancedTokenRelayingRestTemplate = oAuth2RestTemplate;
     }
 
-    public void setUserInfoRestTemplate(OAuth2RestTemplate userInfoRestTemplate) {
-        this.userInfoRestTemplate = userInfoRestTemplate;
+    public void setTokenRelayingRestTemplate(OAuth2RestTemplate userInfoRestTemplate) {
+        this.tokenRelayingRestTemplate = userInfoRestTemplate;
     }
 
 }
