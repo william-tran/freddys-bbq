@@ -1,9 +1,6 @@
 package microsec.freddysbbq.admin_app;
 
 import java.security.Principal;
-import java.util.Arrays;
-
-import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,18 +10,18 @@ import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.hal.Jackson2HalModule;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 import org.springframework.security.oauth2.provider.expression.OAuth2WebSecurityExpressionHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,8 +30,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 
 import microsec.common.Branding;
@@ -56,7 +51,7 @@ public class AdminApplication extends WebSecurityConfigurerAdapter {
     }
 
     @Autowired
-    private SecurityProperties securityProperties; 
+    private SecurityProperties securityProperties;
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
@@ -73,9 +68,6 @@ public class AdminApplication extends WebSecurityConfigurerAdapter {
     @Qualifier("loadBalancedOauth2RestTemplate")
     private OAuth2RestTemplate restTemplate;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @Bean
     public Targets targets() {
         return new Targets();
@@ -86,14 +78,13 @@ public class AdminApplication extends WebSecurityConfigurerAdapter {
         return new Branding();
     }
 
-    @PostConstruct
-    public void halConfig() {
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        objectMapper.registerModule(new Jackson2HalModule());
-        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-        converter.setSupportedMediaTypes(MediaType.parseMediaTypes("application/hal+json"));
-        converter.setObjectMapper(objectMapper);
-        restTemplate.setMessageConverters(Arrays.asList(converter));
+    @LoadBalanced
+    @Bean
+    public OAuth2RestTemplate loadBalancedOauth2RestTemplate(
+            OAuth2ProtectedResourceDetails resource,
+            OAuth2ClientContext oauth2Context) {
+        OAuth2RestTemplate oauth2RestTemplate = new OAuth2RestTemplate(resource, oauth2Context);
+        return oauth2RestTemplate;
     }
 
     @RequestMapping("/")
@@ -178,6 +169,5 @@ public class AdminApplication extends WebSecurityConfigurerAdapter {
         restTemplate.delete("{order}/orders/{id}", targets().getOrder(), id);
         return "redirect:..";
     }
-
 
 }
