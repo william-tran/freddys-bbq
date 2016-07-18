@@ -37,7 +37,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @WebIntegrationTest()
 @TestPropertySource(properties = {
         "server.port=0",
-        "spring.oauth2.resource.jwt.keyValue=test"
+        "security.oauth2.resource.jwt.keyValue=test"
 })
 public abstract class SecurityIntegrationTest {
 
