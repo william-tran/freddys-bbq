@@ -41,7 +41,7 @@
       <dependency>
         <groupId>io.pivotal.spring.cloud</groupId>
         <artifactId>spring-cloud-services-dependencies</artifactId>
-        <version>1.1.0.RELEASE</version>
+        <version>1.1.1.RELEASE</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -74,10 +74,6 @@
   </build>
 
   <repositories>
-    <repository>
-      <id>spring-snapshot</id>
-      <url>https://repo.spring.io/libs-snapshot</url>
-    </repository>
     <repository>
       <id>spring-release</id>
       <url>https://repo.spring.io/libs-release</url>
