@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Login page</title>
+	<link rel="stylesheet" href="/lib/bootstrap/3.2.0/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="/lib/bootstrap/3.2.0/css/bootstrap-theme.min.css" />
+	<script type="text/javascript" src="/lib/jquery-2.1.1.js"></script>
+	<script type="text/javascript" src="/lib/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  </head>
+  <body>
+    <div class="container" style="margin-top:20%;">
+	    <div class="col-md-4 col-md-offset-4">
+	    <h2>Custom User Registry</h2>
+		    <div class="login-panel panel panel-default">
+			    <div class="panel-heading">
+				    <h3 class="panel-title">Sign In</h3>
+			    </div>
+			    <div class="panel-body">
+				    <p th:if="${loginError}" class="text-error">Wrong user or password</p>
+				    <form th:action="@{/login}" method="post">
+					    <fieldset>
+						    <div class="form-group">
+							    <input class="form-control" placeholder="Username" name="username" type="text" autofocus="" />
+						    </div>
+						    <div class="form-group">
+							    <input class="form-control" placeholder="Password" name="password" type="password"  />
+						    </div>
+
+						    <!-- Change this to a button or input when using this as a form -->
+						    <input type="submit" value="Log in" />
+					    </fieldset>
+				    </form>
+			    </div>
+		    </div>
+	    </div>
+    </div>
+  </body>
+</html>

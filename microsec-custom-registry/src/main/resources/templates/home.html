@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8"/>
+	<title>Sample Application</title>
+	<script type="text/javascript" src="/lib/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+	<script src="/lib/lodash.js"></script>
+	<style>
+		pre {
+			min-height: 250px;
+		}
+	</style>
+	<!-- APP -->
+</head>
+<body>
+<br/>
+<br/>
+
+<div class="container section1">
+	<h1 class="page-header " id="page-header">Login Server - <a href="/logout" class="btn btn-default expireBtn">Logout</a></h1>
+	<p>
+		Currently LoggedIn User (AuthenticatedMainframeUser): 
+	</p>
+	<pre th:text="${userJson}">
+	</pre>
+</div>
+
+</body>
+</html>
