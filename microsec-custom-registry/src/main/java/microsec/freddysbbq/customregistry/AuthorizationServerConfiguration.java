@@ -1,5 +1,7 @@
 package microsec.freddysbbq.customregistry;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +11,7 @@ import org.springframework.security.oauth2.config.annotation.configurers.ClientD
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
@@ -27,6 +30,9 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	@Autowired
 	@Qualifier("authenticationManagerBean")
 	private AuthenticationManager authenticationManager;
+	
+	@Autowired
+	private JwtAccessTokenConverter accessTokenConverter;
 
 	@Bean
 	public JwtAccessTokenConverter accessTokenConverter(JwtTokenKeys jwtTokenKeys) {
@@ -47,7 +53,9 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 		        .authorizedGrantTypes("authorization_code")
 				.authorities("ROLE_CLIENT")
 				.scopes("openid")
-				.autoApprove(true);
+				.autoApprove(true)
+				.accessTokenValiditySeconds(60)
+	            .refreshTokenValiditySeconds(3600);
 		// @formatter:on
 	}
 
@@ -58,15 +66,20 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-		endpoints.tokenStore(tokenStore).authenticationManager(authenticationManager);
-		endpoints.tokenEnhancer(this.enhancer);
+		
+	TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
+		    tokenEnhancerChain.setTokenEnhancers(Arrays.asList(this.accessTokenConverter,this.enhancer));
+		    
+		endpoints.tokenStore(this.tokenStore)
+		         .authenticationManager(this.authenticationManager)
+		         .accessTokenConverter(this.accessTokenConverter)
+				 .tokenEnhancer(tokenEnhancerChain);
 	}
 
 	@Override
 	public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
 		oauthServer.tokenKeyAccess("isAnonymous() || hasAuthority('ROLE_CLIENT')").checkTokenAccess(
 				"hasAuthority('ROLE_CLIENT')");
-	//	oauthServer.tokenKeyAccess("isAnonymous()");
 	}
 
 }
