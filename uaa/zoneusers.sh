@@ -14,7 +14,7 @@ uaac user add freddy --email freddy@freddysbbq.com --given_name Freddy --family_
 uaac group add menu.read
 uaac group add menu.write
 uaac group add order.admin
-uaac group add orders.me
+uaac group add order.me
 uaac member add menu.read frank
 uaac member add menu.read freddy
 uaac member add menu.write freddy
