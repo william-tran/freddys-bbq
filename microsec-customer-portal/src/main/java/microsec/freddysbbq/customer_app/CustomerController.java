@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 
 import microsec.common.MenuBootstrap;
-import microsec.common.Targets;
 import microsec.freddysbbq.menu.model.v1.MenuItem;
 import microsec.freddysbbq.order.model.v1.Order;
 
@@ -30,9 +29,6 @@ public class CustomerController {
     @Autowired
     @Qualifier("loadBalancedOauth2RestTemplate")
     private OAuth2RestTemplate oauth2RestTemplate;
-
-    @Autowired
-    private Targets targets;
 
     @Autowired
     private MenuBootstrap menuBootstrap;
@@ -48,10 +44,10 @@ public class CustomerController {
     public String menu(Model model) throws Exception {
         PagedResources<MenuItem> menu = oauth2RestTemplate
                 .exchange(
-                        "{menu}/menuItems",
+                        "//menu-service/menuItems",
                         HttpMethod.GET, null,
                         new ParameterizedTypeReference<PagedResources<MenuItem>>() {
-                        }, targets.getMenu())
+                        })
                 .getBody();
         model.addAttribute("menu", menu.getContent());
         return "menu";
@@ -68,10 +64,10 @@ public class CustomerController {
     public String myOrders(Model model) throws Exception {
         Collection<Order> orders = oauth2RestTemplate
                 .exchange(
-                        "{order}/myorders",
+                        "//order-service/myorders",
                         HttpMethod.GET, null,
                         new ParameterizedTypeReference<Collection<Order>>() {
-                        }, targets.getOrder())
+                        })
                 .getBody();
         model.addAttribute("orders", orders);
         return "myorders";
@@ -87,7 +83,7 @@ public class CustomerController {
     @HystrixCommand(fallbackMethod = "placeOrderFallback")
     public String placeOrder(Model model, @ModelAttribute OrderForm orderForm) throws Exception {
         oauth2RestTemplate
-                .postForObject("{order}/myorders", orderForm.getOrder(), Void.class, targets.getOrder());
+                .postForObject("//order-service/myorders", orderForm.getOrder(), Void.class);
         return "redirect:.";
     }
 

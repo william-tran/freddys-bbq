@@ -27,7 +27,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import microsec.common.Branding;
 import microsec.common.DumpTokenEndpointConfig;
 import microsec.common.MenuBootstrap;
-import microsec.common.Targets;
 
 @SpringBootApplication
 @EnableOAuth2Sso
@@ -49,11 +48,6 @@ public class CustomerApplication extends WebSecurityConfigurerAdapter {
             http.requiresChannel().anyRequest().requiresSecure();
         }
         http.authorizeRequests().anyRequest().authenticated();
-    }
-
-    @Bean
-    public Targets targets() {
-        return new Targets();
     }
 
     @Bean

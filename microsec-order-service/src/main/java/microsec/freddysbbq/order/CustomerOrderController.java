@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 
-import microsec.common.Targets;
 import microsec.common.TokenRelayingRestTemplate;
 import microsec.freddysbbq.menu.model.v1.MenuItem;
 import microsec.freddysbbq.order.model.v1.Order;
@@ -49,9 +48,6 @@ public class CustomerOrderController {
 
     @Autowired
     private ResourceServerProperties resourceServerProperties;
-
-    @Autowired
-    private Targets targets;
 
     @PreAuthorize("#oauth2.hasScope('order.me')")
     @RequestMapping("/myorders")
@@ -85,7 +81,7 @@ public class CustomerOrderController {
             }
             try {
                 MenuItem item = loadBalancedTokenRelayingRestTemplate
-                        .getForObject("{menu}/menuItems/{id}", MenuItem.class, targets.getMenu(), itemId);
+                        .getForObject("//menu-service/menuItems/{id}", MenuItem.class, itemId);
                 OrderItem orderItem = new OrderItem();
                 orderItem.setOrder(order);
                 orderItem.setMenuItemId(itemId);

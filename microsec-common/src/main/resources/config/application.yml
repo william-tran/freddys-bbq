@@ -7,10 +7,7 @@ security.user.password: password
 spring.thymeleaf.cache: false
 
 targets:
-  scheme: http
-  uaa: ${targets.scheme}://localhost:8080/uaa
-  menu: ${targets.scheme}://menu-service
-  order: ${targets.scheme}://order-service
+  uaa: http://localhost:8080/uaa
   
 branding:
   restaurantName: Freddy's BBQ Joint
@@ -32,7 +29,3 @@ spring:
   profiles: cloud 
 
 security.require_ssl: true
-
-targets:
-  scheme: https
-  uaa: ${targets.scheme}://boston.login.coral.springapps.io

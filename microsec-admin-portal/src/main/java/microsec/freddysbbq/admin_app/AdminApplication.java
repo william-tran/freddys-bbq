@@ -34,7 +34,6 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 
 import microsec.common.Branding;
 import microsec.common.DumpTokenEndpointConfig;
-import microsec.common.Targets;
 import microsec.freddysbbq.menu.model.v1.MenuItem;
 import microsec.freddysbbq.order.model.v1.Order;
 
@@ -69,11 +68,6 @@ public class AdminApplication extends WebSecurityConfigurerAdapter {
     private OAuth2RestTemplate restTemplate;
 
     @Bean
-    public Targets targets() {
-        return new Targets();
-    }
-
-    @Bean
     public Branding branding() {
         return new Branding();
     }
@@ -98,10 +92,10 @@ public class AdminApplication extends WebSecurityConfigurerAdapter {
     public String menu(Model model) throws Exception {
         PagedResources<MenuItem> menu = restTemplate
                 .exchange(
-                        "{menu}/menuItems",
+                        "//menu-service/menuItems",
                         HttpMethod.GET, null,
                         new ParameterizedTypeReference<PagedResources<MenuItem>>() {
-                        }, targets().getMenu())
+                        })
                 .getBody();
         model.addAttribute("menu", menu.getContent());
         return "menu";
@@ -117,7 +111,7 @@ public class AdminApplication extends WebSecurityConfigurerAdapter {
     @RequestMapping(method = RequestMethod.POST, value = "/menuItems/new/")
     public String saveNewMenuItem(@ModelAttribute MenuItem menuItem) throws Exception {
         restTemplate
-                .postForEntity("{menu}/menuItems/", menuItem, Void.class, targets().getMenu());
+                .postForEntity("//menu-service/menuItems/", menuItem, Void.class);
         return "redirect:..";
     }
 
@@ -126,10 +120,10 @@ public class AdminApplication extends WebSecurityConfigurerAdapter {
     public String viewMenuItem(Model model, @PathVariable String id) throws Exception {
         Resource<MenuItem> item = restTemplate
                 .exchange(
-                        "{menu}/menuItems/{id}",
+                        "//menu-service/menuItems/{id}",
                         HttpMethod.GET, null,
                         new ParameterizedTypeReference<Resource<MenuItem>>() {
-                        }, targets().getMenu(), id)
+                        }, id)
                 .getBody();
         model.addAttribute("menuItem", item.getContent());
         return "menuItem";
@@ -138,14 +132,14 @@ public class AdminApplication extends WebSecurityConfigurerAdapter {
     @HystrixCommand
     @RequestMapping(method = RequestMethod.POST, value = "/menuItems/{id}")
     public String saveMenuItem(@PathVariable String id, @ModelAttribute MenuItem menuItem) throws Exception {
-        restTemplate.put("{menu}/menuItems/{id}", menuItem, targets().getMenu(), id);
+        restTemplate.put("//menu-service/menuItems/{id}", menuItem, id);
         return "redirect:..";
     }
 
     @HystrixCommand
     @RequestMapping(method = RequestMethod.POST, value = "/menuItems/{id}/delete")
     public String deleteMenuItem(@PathVariable String id, @ModelAttribute MenuItem menuItem) throws Exception {
-        restTemplate.delete("{menu}/menuItems/{id}", targets().getMenu(), id);
+        restTemplate.delete("//menu-service/menuItems/{id}", id);
         return "redirect:..";
     }
 
@@ -154,10 +148,10 @@ public class AdminApplication extends WebSecurityConfigurerAdapter {
     public String viewOrders(Model model) {
         PagedResources<Order> orders = restTemplate
                 .exchange(
-                        "{order}/orders",
+                        "//order-service/orders",
                         HttpMethod.GET, null,
                         new ParameterizedTypeReference<PagedResources<Order>>() {
-                        }, targets().getOrder())
+                        })
                 .getBody();
         model.addAttribute("orders", orders.getContent());
         return "orders";
@@ -166,7 +160,7 @@ public class AdminApplication extends WebSecurityConfigurerAdapter {
     @HystrixCommand
     @RequestMapping(method = RequestMethod.POST, value = "/orders/{id}/delete")
     public String deleteOrder(@PathVariable String id) {
-        restTemplate.delete("{order}/orders/{id}", targets().getOrder(), id);
+        restTemplate.delete("//order-service/orders/{id}", id);
         return "redirect:..";
     }
 
