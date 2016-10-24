@@ -3,15 +3,20 @@
 <head>
   <title th:text="${@branding.restaurantName}">Restaurant</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous" />
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </head>
 <body>
-  <h1>Your Orders</h1>
-  <h2 th:if="${orderServiceDown}">The Order Service is currently offline, please call the restaurant to place an order.</h2>
-  
-    <ul th:if="!${orderServiceDown}" th:each="order : ${orders}">
-      <li>
-        <p>Order placed on <b th:text="${order.placed}">Friday</b> for <b th:text="|$ ${order.total}|">$ 20.00</b></p>
-        <table border="1">
+  <div class="container">
+    <div class="page-header">
+      <h1>Your Orders</h1>
+    </div>
+    <div class="row">
+      <h2 th:if="${orderServiceDown}">The Order Service is currently offline, please call the restaurant to place an order.</h2>
+      <div class="col-md-12">
+        <h3>Order placed on <b th:text="${order.placed}">Friday</b> for <b th:text="|$ ${order.total}|">$ 20.00</b></h3>
+        <table class="table table-striped">
           <thead>
             <tr>
               <td>Item</td><td>Price</td><td>Quantity</td>
@@ -25,8 +30,9 @@
             </tr>
           </tbody>
         </table>
-      </li>
-    </ul>
-    <a href="/">Back to home</a>
+        <a href="/">Back to home</a>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

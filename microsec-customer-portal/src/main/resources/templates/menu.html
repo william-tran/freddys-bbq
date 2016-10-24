@@ -1,30 +1,42 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title th:text="${@branding.restaurantName} + ' | Menu'">Restaurant | Menu</title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title th:text="${@branding.restaurantName} + ' | Menu'">Restaurant | Menu</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous" />
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </head>
 <body>
-  <h1 th:text="|${@branding.menuTitle}|">The Menu</h1>
-  <h2 th:if="${menuServiceDown}">The Menu Service is currently offline but here is a sample of some of the items we serve! To place an order, please call the restaurant.</h2>
-
-  <form method="POST" th:action="@{/myorders/}">
-    <table border="1">
-      <thead>
-        <tr th:if="!${menuServiceDown}">
-          <td>Item</td><td>Price</td><td>Quantity</td>
-        </tr>
-      </thead>
-      <tbody>
-        <tr th:each="item : ${menu}">
-          <td th:text="${item.name}">Something</td>
-          <td th:if="!${menuServiceDown}" th:text="${item.price}">$1.00</td>
-          <td th:if="!${menuServiceDown}"><input type="text" th:name="|order[${item.id}]|"/></td>
-        </tr>
-      </tbody>
-    </table>
-    <input th:if="!${menuServiceDown}" type="submit" value="Place Order"/>
-  </form>
-  <a href="/">Back to home</a>
+  <div class="container">
+    <div class="page-header">
+      <h1 th:text="|${@branding.menuTitle}|">The Menu</h1>
+    </div>
+    <div class="row">
+      <h2 th:if="${menuServiceDown}">The Menu Service is currently offline but here is a sample of some of the items we serve! To place an order, please call the restaurant.</h2>
+      <div class="col-md-12">
+        <form method="POST" th:action="@{/myorders/}">
+          <table class="table table-striped">
+            <thead>
+              <tr th:if="!${menuServiceDown}">
+                <th>Item</th>
+                <th>Price</th>
+                <th>Quantity</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="item : ${menu}">
+                <td th:text="${item.name}">Something</td>
+                <td th:if="!${menuServiceDown}" th:text="${item.price}">$1.00</td>
+                <td th:if="!${menuServiceDown}"><input type="text" th:name="|order[${item.id}]|"/></td>
+              </tr>
+            </tbody>
+          </table>
+          <input th:if="!${menuServiceDown}" type="submit" value="Place Order"/>
+        </form>
+        <a href="/">Back to home</a>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
