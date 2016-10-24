@@ -11,9 +11,9 @@
   <div class="container">
     <div class="page-header">
       <h1 th:text="|${@branding.menuTitle}|">The Menu</h1>
+      <h2 th:if="${menuServiceDown}">The Menu Service is currently offline but here is a sample of some of the items we serve! To place an order, please call the restaurant.</h2>
     </div>
     <div class="row">
-      <h2 th:if="${menuServiceDown}">The Menu Service is currently offline but here is a sample of some of the items we serve! To place an order, please call the restaurant.</h2>
       <div class="col-md-12">
         <form method="POST" th:action="@{/myorders/}">
           <table class="table table-striped">

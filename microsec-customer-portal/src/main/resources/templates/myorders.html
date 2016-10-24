@@ -11,9 +11,9 @@
   <div class="container">
     <div class="page-header">
       <h1>Your Orders</h1>
-    </div>
-    <div class="row">
       <h2 th:if="${orderServiceDown}">The Order Service is currently offline, please call the restaurant to place an order.</h2>
+    </div>
+    <div class="row" th:if="!${orderServiceDown}" th:each="order : ${orders}">
       <div class="col-md-12">
         <h3>Order placed on <b th:text="${order.placed}">Friday</b> for <b th:text="|$ ${order.total}|">$ 20.00</b></h3>
         <table class="table table-striped">

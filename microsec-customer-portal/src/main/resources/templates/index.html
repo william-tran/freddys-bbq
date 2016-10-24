@@ -20,14 +20,16 @@
 					<table class="table table-hover">
 						<tr>
 							<td>
-								<a href="menu.html" th:href="/menu/">
+								<a href="menu.html" th:href="@{/menu/}">
+									<img src="../static/images/menu.png" th:src="@{images/menu.png}" />
 									<h3>View the menu and place your order</h3>
 								</a>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<a href="myorders.html" th:href="/myorders/">
+								<a href="myorders.html" th:href="@{/myorders/}">
+									<img src="../static/images/orders.png" th:src="@{images/orders.png}" />
 									<h3>Your orders</h3>
 								</a>
 							</td>
@@ -35,6 +37,7 @@
 						<tr>
 							<td>
 								<a href="/dump_token">
+									<img src="../static/images/access.png" th:src="@{images/access.png}" />
 									<h3>View your access token</h3>
 								</a>
 							</td>
