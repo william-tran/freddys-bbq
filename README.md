@@ -116,7 +116,7 @@ These scripts need some environment variables defined in order to run against Cl
 ```
 # UAA_ENDPOINT eg uaa.mypcf.example.com
 # ADMIN_CLIENT_ID eg admin
-# ADMIN_CLIENT_SECRET get this from Ops Manager Elastic Runtime UAA Admin credentials
+# ADMIN_CLIENT_SECRET get this from Ops Manager Elastic Runtime UAA "Admin Client Credentials"
 # IDENTITY_ZONE_ID this is the GUID of the identity zone which is the first GUID in the URI for any page in the `sso` service instance dashboard
 # ZONEADMIN_CLIENT_ID pick a name for the admin client in the zone
 # ZONEADMIN_CLIENT_SECRET
