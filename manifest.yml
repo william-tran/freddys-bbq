@@ -5,7 +5,10 @@ services:
   - service-registry
 
 applications:
-  
+ 
+ - name: custom-registry
+   path: microsec-custom-registry/target/microsec-custom-registry.jar
+     
  - name: customer-portal
    path: microsec-customer-portal/target/microsec-customer-portal.jar
    services:
