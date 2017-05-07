@@ -23,7 +23,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.jwt.JwtHelper;
 import org.springframework.security.jwt.crypto.sign.MacSigner;
@@ -34,7 +34,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@WebIntegrationTest()
+@SpringBootTest
 @TestPropertySource(properties = {
         "server.port=0",
         "security.oauth2.resource.jwt.keyValue=test"

@@ -2,14 +2,14 @@ package microsec.freddysbbq.order;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
-import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
-import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
+import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
@@ -32,9 +32,9 @@ public class OrderApplication {
     }
 
     @Configuration
-    public static class RepositoryConfig extends RepositoryRestMvcConfiguration {
+    public static class RepositoryConfig extends RepositoryRestConfigurerAdapter {
         @Override
-        protected void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
+        public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
             config.exposeIdsFor(Order.class);
         }
     }
