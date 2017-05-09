@@ -1,20 +1,40 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title th:text="${@branding.restaurantName} + ' | Menu'">Restaurant | Menu</title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title th:text="${@branding.restaurantName} + ' | Menu'">Restaurant | Menu</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous" />
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </head>
 <body>
-  <h1 th:text="|${@branding.menuTitle}|">The Menu</h1>
-
-  <form method="POST" th:action=".">
-    <p><label for="name">Name</label><input type="text" th:field="*{menuItem.name}" id="name" /></p>
-    <p><label for="name">Price</label><input type="text" th:field="*{menuItem.price}" id="price" /></p>
-    <input type="submit" value="save"/>
-  </form>
-  <form method="POST" th:action="delete">
-    <input type="submit" value="delete"/>
-  </form>
-  <a href="..">Back</a>
+  <div class="container">
+    <div class="page-header">
+      <h1 th:text="|${@branding.menuTitle}|">The Menu Item</h1>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <form method="POST" th:action=".">
+          <table class="table">
+            <tr>
+              <td><label for="name">Name</label></td>
+              <td><input type="text" th:field="*{menuItem.name}" id="name" /></td>
+            </tr>
+            <tr>
+              <td><label for="name">Price</label></td>
+              <td><input type="text" th:field="*{menuItem.price}" id="price" /></td>
+            </tr>
+            <tr>
+              <td colspan="2"><input type="submit" value="save"/></td>
+            </tr>
+          </table>
+        </form>
+        <form method="POST" th:action="delete">
+          <input type="submit" value="delete"/>
+        </form>
+        <a href="..">Back</a>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

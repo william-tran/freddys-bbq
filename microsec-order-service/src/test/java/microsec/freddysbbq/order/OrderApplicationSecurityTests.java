@@ -158,7 +158,7 @@ public class OrderApplicationSecurityTests extends SecurityIntegrationTest {
         MenuItem menuItem = new MenuItem();
         menuItem.setName("test");
         menuItem.setPrice(new BigDecimal(1));
-        when(mockRestTemplate.getForObject(anyString(), eq(MenuItem.class), any(), any()))
+        when(mockRestTemplate.getForObject(anyString(), eq(MenuItem.class), anyString()))
                 .thenReturn(menuItem);
 
         response = httpsRequest(HttpMethod.POST, "/myorders", token, ContentType.APPLICATION_JSON, body);

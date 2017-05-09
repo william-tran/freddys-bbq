@@ -27,7 +27,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import microsec.common.Branding;
 import microsec.common.DumpTokenEndpointConfig;
 import microsec.common.MenuBootstrap;
-import microsec.common.Targets;
 
 @SpringBootApplication
 @EnableOAuth2Sso
@@ -52,11 +51,6 @@ public class CustomerApplication extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public Targets targets() {
-        return new Targets();
-    }
-
-    @Bean
     public Branding branding() {
         return new Branding();
     }
@@ -70,15 +64,8 @@ public class CustomerApplication extends WebSecurityConfigurerAdapter {
     @Bean
     public OAuth2RestTemplate loadBalancedOauth2RestTemplate(
             OAuth2ProtectedResourceDetails resource,
-            OAuth2ClientContext oauth2Context,
-            ObjectMapper objectMapper) {
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        objectMapper.registerModule(new Jackson2HalModule());
-        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-        converter.setSupportedMediaTypes(MediaType.parseMediaTypes("application/hal+json"));
-        converter.setObjectMapper(objectMapper);
+            OAuth2ClientContext oauth2Context) {
         OAuth2RestTemplate oauth2RestTemplate = new OAuth2RestTemplate(resource, oauth2Context);
-        oauth2RestTemplate.setMessageConverters(Arrays.asList(converter));
         return oauth2RestTemplate;
     }
 

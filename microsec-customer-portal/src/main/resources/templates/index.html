@@ -1,23 +1,50 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 	<head>
-	    <title th:text="${@branding.restaurantName}">Restaurant</title>
-
-	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title th:text="${@branding.restaurantName}">Restaurant</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous" />
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous" />
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 	</head>
 	<body>
-		<h1 th:text="|Hi ${username}! Welcome to ${@branding.restaurantName}|">Welcome to Restaurant</h1>
-		<h2>What do you want to do?</h2>
-		<ul>
-			<li>
-				<a href="/menu/">View the menu and place your order</a>
-			</li>
-			<li>
-				<a href="/myorders/">Your orders</a>
-			</li>
-            <li>
-              <a href="/dump_token">View your access token</a>
-            </li>
-		</ul>		
+		<div class="container">
+			<div class="page-header">
+				<h1 th:text="|Hi ${username}! Welcome to ${@branding.restaurantName}|">Hi Jim! Welcome to Restaurant</h1>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<h2>What do you want to do?</h2>
+				</div>
+				<div class="col-md-8">
+					<table class="table table-hover">
+						<tr>
+							<td>
+								<a href="menu.html" th:href="@{/menu/}">
+									<img src="../static/images/menu.png" th:src="@{images/menu.png}" />
+									<h3>View the menu and place your order</h3>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a href="myorders.html" th:href="@{/myorders/}">
+									<img src="../static/images/orders.png" th:src="@{images/orders.png}" />
+									<h3>Your orders</h3>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a href="/dump_token">
+									<img src="../static/images/access.png" th:src="@{images/access.png}" />
+									<h3>View your access token</h3>
+								</a>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
 	</body>
 </html>
