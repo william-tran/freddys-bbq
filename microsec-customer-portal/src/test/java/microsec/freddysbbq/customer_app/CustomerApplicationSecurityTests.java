@@ -3,12 +3,14 @@ package microsec.freddysbbq.customer_app;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2SsoProperties;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
 import microsec.test.SecurityIntegrationTest;
 
-@SpringApplicationConfiguration(classes = CustomerApplication.class)
+@SpringBootTest
+@ContextConfiguration(classes = CustomerApplication.class)
 @TestPropertySource(properties = "security.require-ssl=true")
 public class CustomerApplicationSecurityTests extends SecurityIntegrationTest {
 

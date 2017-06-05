@@ -11,7 +11,7 @@
     <dependency>
       <groupId>org.cloudfoundry.identity</groupId>
       <artifactId>cloudfoundry-identity-uaa</artifactId>
-      <version>3.4.0</version>
+      <version>3.16.0</version>
       <type>war</type>
     </dependency>
   </dependencies>

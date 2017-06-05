@@ -7,8 +7,9 @@ import org.apache.http.HttpResponse;
 import org.apache.http.entity.ContentType;
 import org.junit.Assert;
 import org.junit.Test;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,7 +19,8 @@ import microsec.test.SecurityIntegrationTest;
 import microsec.test.UaaJwtToken;
 import microsec.test.UaaJwtToken.UaaJwtTokenBuilder;
 
-@SpringApplicationConfiguration(classes = MenuApplication.class)
+@SpringBootTest
+@ContextConfiguration(classes = MenuApplication.class)
 @TestPropertySource(properties = "security.require-ssl=true")
 public class MenuApplicationSecurityTests extends SecurityIntegrationTest {
 

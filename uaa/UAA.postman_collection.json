@@ -1,0 +1,377 @@
+{
+	"variables": [],
+	"info": {
+		"name": "UAA",
+		"_postman_id": "ecbbb019-bc0d-3ac9-fa7f-095d3a05433e",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Information",
+			"description": "",
+			"item": [
+				{
+					"name": "/info",
+					"request": {
+						"url": "{{uaaUrl}}/info",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/login",
+					"request": {
+						"url": "{{uaaUrl}}/login",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "admin-requests",
+			"description": "",
+			"item": [
+				{
+					"name": "Login Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "var jsonData = JSON.parse(responseBody);\npostman.setEnvironmentVariable(\"admin_access_token\", \"Bearer \" + jsonData.access_token);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{uaaUrl}}/oauth/token?grant_type=client_credentials",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic YWRtaW46YWRtaW5zZWNyZXQ=",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/identity-providers",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "var jsonData = JSON.parse(responseBody);\nfor (let s of jsonData) {\n if( s.originKey === \"testoidc\") {\n     postman.setEnvironmentVariable(\"oidcId\", s.id);\n }\n}"
+							}
+						}
+					],
+					"request": {
+						"url": "{{uaaUrl}}/identity-providers/",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{admin_access_token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "OIDC idenity Provider",
+					"request": {
+						"url": "{{uaaUrl}}/identity-providers/{{oidcId}}",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{admin_access_token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Update OIDC provider",
+					"request": {
+						"url": "{{uaaUrl}}/identity-providers/{{oidcId}}",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{admin_access_token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " {\n  \"type\": \"oidc1.0\",\n  \"config\": {\n   \"emailDomain\" : null,\n   \"providerDescription\" : \"Mainframe Auth\",\n   \"attributeMappings\" : {\"email\":\"mail\",\"user_name\":\"user_name\",\"scope\":\"scope\",\"external_groups\":[\"scope\"]},\n   \"authUrl\" : \"http://localhost:8081/oauth/authorize\",\n   \"tokenUrl\" : \"http://localhost:8081/oauth/token\",\n   \"tokenKeyUrl\" : \"http://localhost:8081/oauth/token_key\",\n   \"tokenKey\" : null,\n   \"linkText\" : \"TEST OIDC\",\n   \"showLinkText\" : true,\n   \"skipSslValidation\" : true,\n   \"relyingPartyId\" : \"uaa\",\n   \"relyingPartySecret\" : \"password\",\n   \"scopes\" : [\"openid\"] ,\n   \"addShadowUserOnLogin\" : true\n } ,\n  \"id\": \"1277e0f6-77de-477c-8b81-08185b43af7d\",\n  \"originKey\": \"testoidc\",\n  \"name\": \"MainFrame Provider\",\n  \"version\": 0,\n  \"created\": 1470630916645,\n  \"last_modified\": 1470630916645,\n  \"active\": true,\n  \"identityZoneId\": \"uaa\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/userinfo",
+					"request": {
+						"url": "{{uaaUrl}}/userinfo",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{admin_access_token}}",
+								"description": ""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/identity-zones",
+					"request": {
+						"url": "{{uaaUrl}}/identity-zones",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{admin_access_token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/oauth/clients",
+					"request": {
+						"url": "{{uaaUrl}}/oauth/clients",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{admin_access_token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "oauth/clients/customer-portal",
+					"request": {
+						"url": "{{uaaUrl}}/oauth/clients/customer-portal",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{admin_access_token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "oauth/clients/customer-portal",
+					"request": {
+						"url": "{{uaaUrl}}/oauth/clients/customer-portal",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{admin_access_token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"scope\": [\n    \"openid\",\n    \"menu.read\",\n    \"order.me\"\n  ],\n  \"client_id\": \"customer-portal\",\n  \"resource_ids\": [\n    \"none\"\n  ],\n  \"authorized_grant_types\": [\n    \"authorization_code\",\n    \"refresh_token\"\n  ],\n  \"redirect_uri\": [\n    \"http://localhost:8082/login\"\n  ],\n  \"autoapprove\": [],\n  \"authorities\": [\n    \"uaa.resource\"\n  ],\n  \"allowedproviders\":[\"testoidc\"],\n  \"lastModified\": 1470547286528\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "frank-requests",
+			"description": "",
+			"item": [
+				{
+					"name": "Login In Frank",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "var jsonData = JSON.parse(responseBody);\npostman.setEnvironmentVariable(\"frank_access_token\", \"Bearer \" + jsonData.access_token);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{uaaUrl}}/oauth/token",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "scope",
+								"value": "openid",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "frank",
+									"type": "text",
+									"enabled": true
+								},
+								{
+									"key": "password",
+									"value": "demo",
+									"type": "text",
+									"enabled": true
+								},
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text",
+									"enabled": true
+								},
+								{
+									"key": "client_id",
+									"value": "mobile-app",
+									"type": "text",
+									"enabled": true
+								},
+								{
+									"key": "client_secret",
+									"value": "secret",
+									"type": "text",
+									"enabled": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/userinfo",
+					"request": {
+						"url": "{{uaaUrl}}/userinfo",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{frank_access_token}}",
+								"description": ""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

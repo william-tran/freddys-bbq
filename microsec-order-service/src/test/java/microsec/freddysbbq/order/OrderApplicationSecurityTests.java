@@ -20,9 +20,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,7 +36,8 @@ import microsec.test.UaaJwtToken;
 import microsec.test.UaaJwtToken.UaaJwtTokenBuilder;
 import microsec.uaa.model.v2.UserInfo;
 
-@SpringApplicationConfiguration(classes = OrderApplication.class)
+@SpringBootTest
+@ContextConfiguration(classes = OrderApplication.class)
 @TestPropertySource(properties = "security.require-ssl=true")
 public class OrderApplicationSecurityTests extends SecurityIntegrationTest {
 
